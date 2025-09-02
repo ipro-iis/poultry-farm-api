@@ -30,22 +30,42 @@ export async function remove(req: Request<IdParams>, res: Response) {
   res.json({ ok: true });
 }
 
-export async function startFarm(req: Request<IdParams>, res: Response) {
-  try {
-    const user = req.user as any; // from requireAuth
-    const { id } = req.params;
-    const { startDate, initialAmount, remark } = req.body;
+// export async function startFarm(req: Request<IdParams>, res: Response) {
+//   try {
+//     const user = req.user as any; // from requireAuth
+//     const { id } = req.params;
+//     const { startDate, initialAmount, remark } = req.body;
 
-    const created = await service.startFarm({
-      farmId: id,
-      companyId: user.id,
-      startDate: new Date(startDate),
-      initialAmount,
-      remark,
-    });
+//     const created = await service.startFarm({
+//       farmId: id,
+//       companyId: user.id,
+//       startDate: new Date(startDate),
+//       initialAmount,
+//       remark,
+//     });
 
-    res.json(created);
-  } catch (err) {
-    // next(err);
-  }
-}
+//     res.json(created);
+//   } catch (err) {
+//     // next(err);
+//   }
+// }
+
+// export async function setFarmStatus(req: Request, res: Response) {
+//   const { id } = req.params;
+//   const { status } = req.body;
+
+//   if (!status) {
+//     return res.status(400).json({ error: 'Status is required' });
+//   }
+
+//   try {
+//     const updated = await service.update({
+//       where: { id },
+//       data: { status },
+//     });
+//     res.json(updated);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: 'Failed to update farm status' });
+//   }
+// }

@@ -41,24 +41,29 @@ model Farm {
 
 model DailyInput {
   id               String   @id @default(uuid())
+  createdAt        DateTime @default(now())
   farmId           String
   farm             Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
   inputDate        DateTime
   dayIndex         Int
-  feedName         String?
-  remark           String?
-  deathWithLossQty Int      @default(0)
-  balanceQty       Int      @default(0)
-  balanceWeight    Float    @default(0)
-  createdAt        DateTime @default(now())
   // Store DataInfo payloads as JSON for speed of implementation
-  feedData         Json?
-  deathWithoutLoss Json?
-  discard          Json?
-  sale             Json?
-  charcoal         Json?
+  chicken          Json?
+  //
+  deathLoss        Json?
+  deathSale        Json?
+  discardSale      Json?
+  goodSale         Json?
+  chickenManure    Json?
+  //
+  pesticides       Json?
   riceHusk         Json?
+  charcoal         Json?
   sugar            Json?
+  food             Json?
   medicine         Json?
-  laborFee         Float    @default(0)
+  strengthMedicine Json?
+  vaccine          Json?
+  laborFee         Json?
+  other            Json?
+  remark           String?
 }

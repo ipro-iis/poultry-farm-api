@@ -30,45 +30,45 @@ export async function remove(id: string, companyId: string) {
 }
 
 // ✅ New startFarm service
-export async function startFarm({ farmId, companyId, startDate, initialAmount, remark }: StartFarmInput) {
-  return prisma.$transaction(async (tx) => {
-    const farm = await tx.farm.findUnique({ where: { id: farmId } });
-    if (!farm || farm.companyId !== companyId) {
-      throw new Error("Not found");
-    }
-    if (farm.status !== "available") {
-      throw new Error("Farm is not available to start");
-    }
+// export async function startFarm({ farmId, companyId, startDate, initialAmount, remark }: StartFarmInput) {
+//   return prisma.$transaction(async (tx) => {
+//     const farm = await tx.farm.findUnique({ where: { id: farmId } });
+//     if (!farm || farm.companyId !== companyId) {
+//       throw new Error("Not found");
+//     }
+//     if (farm.status !== "available") {
+//       throw new Error("Farm is not available to start");
+//     }
 
-    // Update farm status
-    await tx.farm.update({
-      where: { id: farmId },
-      data: { status: "using" },
-    });
+//     // Update farm status
+//     await tx.farm.update({
+//       where: { id: farmId },
+//       data: { status: "using" },
+//     });
 
-    // Create Day 0 daily input
-    const created = await tx.dailyInput.create({
-      data: {
-        farmId,
-        inputDate: startDate,
-        dayIndex: 0,
-        feedName: "Initial Stock",
-        deathWithLossQty: 0,
-        feedData: {},
-        deathWithoutLoss: {},
-        discard: {},
-        sale: {},
-        charcoal: {},
-        riceHusk: {},
-        sugar: {},
-        medicine: {},
-        laborFee: 0,
-        balanceQty: initialAmount,
-        balanceWeight: 0,
-        remark: remark ?? null,
-      },
-    });
+//     // Create Day 0 daily input
+//     const created = await tx.dailyInput.create({
+//       data: {
+//         farmId,
+//         inputDate: startDate,
+//         dayIndex: 0,
+//         feedName: "Initial Stock",
+//         deathWithLossQty: 0,
+//         feedData: {},
+//         deathWithoutLoss: {},
+//         discard: {},
+//         sale: {},
+//         charcoal: {},
+//         riceHusk: {},
+//         sugar: {},
+//         medicine: {},
+//         laborFee: 0,
+//         balanceQty: initialAmount,
+//         balanceWeight: 0,
+//         remark: remark ?? null,
+//       },
+//     });
 
-    return created;
-  });
-}
+//     return created;
+//   });
+// }
