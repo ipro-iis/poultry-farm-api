@@ -1,20 +1,33 @@
-import fs from "fs";
-import app from "./app.js";
-import { config } from "./config/index.js";
-import listEndpoints from "express-list-endpoints";
+// import fs from "fs";
+// import app from "./app.js";
+// import { config } from "./config/index.js";
+// import listEndpoints from "express-list-endpoints";
+// import http from "http";
+// import https from "https";
+
+// // SSL options
+// const sslOptions = {
+//   key: fs.readFileSync("server.key"),
+//   cert: fs.readFileSync("server.cert"),
+// };
+
+// const PORT = Number(process.env.PORT || 3000);
+
+// http.createServer(app).listen(PORT, "0.0.0.0", () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
+
 import http from "http";
-import https from "https";
+import app from "./app.js";
+import dotenv from "dotenv";
 
-// SSL options
-const sslOptions = {
-  key: fs.readFileSync("server.key"),
-  cert: fs.readFileSync("server.cert"),
-};
+dotenv.config();
 
-const PORT = Number(process.env.PORT || 3000);
+const PORT: number = Number(process.env.PORT) || 3000;
 
+// Start HTTP server (Railway will handle HTTPS at the edge)
 http.createServer(app).listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
 
 // // Start HTTP server
