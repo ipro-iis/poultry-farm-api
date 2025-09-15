@@ -11,15 +11,21 @@ const sslOptions = {
   cert: fs.readFileSync("server.cert"),
 };
 
-// Start HTTP server
-http.createServer(app).listen(config.port, "0.0.0.0", () => {
-  console.log("HTTP server running at http://192.168.1.3:" + config.port);
+const PORT = Number(process.env.PORT || 3000);
+
+http.createServer(app).listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
-// Start HTTPS server
-https.createServer(sslOptions, app).listen(3443, "0.0.0.0", () => {
-  console.log("HTTPS server running at https://192.168.1.3:3443");
-});
+// // Start HTTP server
+// http.createServer(app).listen(config.port, "0.0.0.0", () => {
+//   console.log("HTTP server running at http://192.168.1.3:" + config.port);
+// });
+
+// // Start HTTPS server
+// https.createServer(sslOptions, app).listen(3443, "0.0.0.0", () => {
+//   console.log("HTTPS server running at https://192.168.1.3:3443");
+// });
 
 // app.listen(config.port, () => {
 //   console.log(`API running on http://localhost:${config.port}`);
