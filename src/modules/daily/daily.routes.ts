@@ -2,8 +2,8 @@ import { Router } from "express";
 import { requireAuth } from "../../middleware/auth.js";
 import { z } from "zod";
 import { validate } from "../../middleware/validate.js";
-import { add, list, remove, update, addStartupWithDay1 } from "./daily.controller.js";
-import { addSchema, startupSchema, dailyBodySchema } from "./daily.schemas.js";
+import { add, list, remove, update, addStartupWithDay1, updateAndRecalculateHandler } from "./daily.controller.js";
+import { addSchema, startupSchema } from "./daily.schemas.js";
 
 const farmParam = z.object({ params: z.object({ farmId: z.string().uuid() }) });
 
@@ -97,6 +97,7 @@ router.post("/:farmId", validate(addSchema), add);
 // ✅ New startup route
 router.post("/:farmId/startup", validate(startupSchema), addStartupWithDay1);
 router.patch("/:id", validate(idParam), update);
+router.patch("/:id/recalculate", validate(idParam), updateAndRecalculateHandler);
 router.delete("/:id", validate(idParam), remove);
 
 export default router;

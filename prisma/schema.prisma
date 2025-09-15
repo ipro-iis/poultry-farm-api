@@ -23,27 +23,43 @@ model Company {
   id           String   @id @default(uuid())
   name         String
   phoneNo      String   @unique
-  emailAddress String   @unique
+  emailAddress String? //@unique
   password     String
   farms        Farm[]
   createdAt    DateTime @default(now())
 }
 
+model FarmCycle {
+  id          String       @id @default(uuid())
+  farmId      String
+  farm        Farm         @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  cycleNumber Int
+  startDate   DateTime
+  endDate     DateTime?
+  isActive    Boolean      @default(true)
+  dailyInputs DailyInput[]
+}
+
 model Farm {
   id          String       @id @default(uuid())
   farmNo      String
+  remark      String?
   status      FarmStatus   @default(available)
+  isInactive  Boolean      @default(false)
   companyId   String
   company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
   dailyInputs DailyInput[]
+  cycles      FarmCycle[]
   createdAt   DateTime     @default(now())
 }
 
 model DailyInput {
-  id               String   @id @default(uuid())
-  createdAt        DateTime @default(now())
+  id               String    @id @default(uuid())
+  createdAt        DateTime  @default(now())
   farmId           String
-  farm             Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  farm             Farm      @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  farmCycleId      String
+  farmCycle        FarmCycle @relation(fields: [farmCycleId], references: [id], onDelete: Cascade)
   inputDate        DateTime
   dayIndex         Int
   // Store DataInfo payloads as JSON for speed of implementation

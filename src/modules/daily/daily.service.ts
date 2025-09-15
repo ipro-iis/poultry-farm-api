@@ -1,11 +1,40 @@
 import { prisma } from "../../prisma/client.js";
 import type { Prisma } from "@prisma/client";
 
-export function listByFarm(farmId: string) {
-  return prisma.dailyInput.findMany({
-    where: { farmId },
-    orderBy: { dayIndex: "asc" },
-  });
+// export async function listByFarm(farmId: string) {
+//   // 1️⃣ Find the active cycle for this farm
+//   const activeCycle = await prisma.farmCycle.findFirst({
+//     where: { farmId, isActive: true },
+//     orderBy: { cycleNumber: "desc" }, // latest active if multiple
+//   });
+
+//   if (!activeCycle) {
+//     return []; //throw new Error(`No active cycle found for farm ${farmId}`);
+//   }
+
+//   // 2️⃣ Get daily inputs for that cycle
+//   return prisma.dailyInput.findMany({
+//     where: { farmCycleId: activeCycle.id },
+//     orderBy: { dayIndex: "asc" },
+//   });
+//   // return prisma.dailyInput.findMany({
+//   //   where: { farmId },
+//   //   orderBy: { dayIndex: "asc" },
+//   // });
+// }
+export async function listByFarm(farmId: string) {
+  return prisma.$queryRaw`
+    SELECT di.*
+    FROM "DailyInput" di
+    WHERE di."farmCycleId" = (
+      SELECT fc.id
+      FROM "FarmCycle" fc
+      WHERE fc."farmId" = ${farmId} AND fc."isActive" = true
+      ORDER BY fc."cycleNumber" DESC
+      LIMIT 1
+    )
+    ORDER BY di."dayIndex" ASC
+  `;
 }
 
 /**
@@ -33,11 +62,22 @@ export async function add(input: {
   other?: any;
   remark?: string | null;
 }) {
+  // 1️⃣ Find the active cycle for this farm
+  const activeCycle = await prisma.farmCycle.findFirst({
+    where: { farmId: input.farmId, isActive: true },
+  });
+
+  if (!activeCycle) {
+    throw new Error(`No active cycle found for farm ${input.farmId}. Start a cycle first.`);
+  }
+
+  // 2️⃣ Find the last daily input for this cycle
   const last = await prisma.dailyInput.findFirst({
     where: { farmId: input.farmId },
     orderBy: { dayIndex: "desc" },
   });
 
+  // 3️⃣ Check date continuity within the cycle
   if (last) {
     const lastDate = new Date(last.inputDate);
     const expected = new Date(lastDate);
@@ -70,9 +110,11 @@ export async function add(input: {
   //     balanceQty: nextQty,
   //     balanceWeight: nextWt,
 
+  // 4️⃣ Create the daily input linked to the active cycle
   return prisma.dailyInput.create({
     data: {
       farm: { connect: { id: input.farmId } }, // ✅ required relation
+      farmCycle: { connect: { id: activeCycle.id } },
       inputDate: input.inputDate,
       dayIndex: input.dayIndex,
       chicken: input.chicken ?? null,
@@ -101,33 +143,59 @@ export async function add(input: {
  */
 export async function addStartupWithDay1(input: {
   farmId: string;
-  day0: Omit<Prisma.DailyInputCreateInput, "farm" | "id" | "createdAt">;
-  day1: Omit<Prisma.DailyInputCreateInput, "farm" | "id" | "createdAt">;
+  day0: Omit<Prisma.DailyInputCreateInput, "farm" | "farmCycle" | "id" | "createdAt">;
+  day1: Omit<Prisma.DailyInputCreateInput, "farm" | "farmCycle" | "id" | "createdAt">;
 }) {
   return prisma.$transaction(async (tx) => {
     const { farmId, day0, day1 } = input;
 
+    // 1️⃣ Determine next cycle number
+    const lastCycle = await tx.farmCycle.findFirst({
+      where: { farmId },
+      orderBy: { cycleNumber: "desc" },
+    });
+    const nextCycleNumber = (lastCycle?.cycleNumber ?? 0) + 1;
+
+    // 2️⃣ Create new active cycle
+    const newCycle = await tx.farmCycle.create({
+      data: {
+        farmId,
+        cycleNumber: nextCycleNumber,
+        startDate: day1.inputDate, // new Date(),
+        isActive: true,
+      },
+    });
+
+    // 3️⃣ Prepare Day 0 and Day 1 data
     const day0Data = { ...day0 } as any;
     delete day0Data.id;
     delete day0Data.farm;
     delete day0Data.farmId;
+    delete day0Data.farmCycle;
+    delete day0Data.farmCycleId;
 
     const day1Data = { ...day1 } as any;
     delete day1Data.id;
     delete day1Data.farm;
     delete day1Data.farmId;
+    delete day1Data.farmCycle;
+    delete day1Data.farmCycleId;
 
+    // 4️⃣ Create Day 0
     const createdDay0 = await tx.dailyInput.create({
       data: {
         ...day0Data,
         farm: { connect: { id: farmId } },
+        farmCycle: { connect: { id: newCycle.id } },
       },
     });
 
+    // 5️⃣ Create Day 1
     const createdDay1 = await tx.dailyInput.create({
       data: {
         ...day1Data,
         farm: { connect: { id: farmId } },
+        farmCycle: { connect: { id: newCycle.id } },
       },
     });
 
@@ -136,7 +204,7 @@ export async function addStartupWithDay1(input: {
       data: { status: "using" },
     });
 
-    return { day0: createdDay0, day1: createdDay1 };
+    return { cycle: newCycle, day0: createdDay0, day1: createdDay1 };
   });
 }
 // export async function addStartupWithDay1(input: { farmId: string; day0: Omit<Prisma.DailyInputCreateInput, "farm">; day1: Omit<Prisma.DailyInputCreateInput, "farm"> }) {

@@ -12,13 +12,14 @@ export async function list(req: Request, res: Response) {
 
 export async function create(req: Request, res: Response) {
   const user = req.user as any;
-  const farm = await service.create(user.id, req.body.farmNo);
+  const farm = await service.create(user.id, req.body.farmNo, req.body.remark);
   res.json(farm);
 }
 
 export async function update(req: Request<IdParams>, res: Response) {
-  const data: { farmNo?: string; status?: FarmStatus } = {};
+  const data: { farmNo?: string; remark?: string; status?: FarmStatus } = {};
   if (req.body.farmNo) data.farmNo = req.body.farmNo;
+  if (req.body.remark) data.remark = req.body.remark;
   if (req.body.status) data.status = req.body.status;
   const farm = await service.update(req.params.id, data);
   res.json(farm);
@@ -28,6 +29,18 @@ export async function remove(req: Request<IdParams>, res: Response) {
   const user = req.user as any;
   await service.remove(req.params.id, user.id);
   res.json({ ok: true });
+}
+
+export async function closeFarm(req: Request<IdParams>, res: Response) {
+  const user = req.user as any;
+  const farm = await service.closeFarm(req.params.id, user.id);
+  res.json(farm);
+}
+
+export async function removeFarm(req: Request<IdParams>, res: Response) {
+  const user = req.user as any;
+  const farm = await service.removeFarm(req.params.id, user.id);
+  res.json(farm);
 }
 
 // export async function startFarm(req: Request<IdParams>, res: Response) {

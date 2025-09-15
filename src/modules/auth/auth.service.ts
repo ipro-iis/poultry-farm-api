@@ -4,9 +4,9 @@ import { signJwt } from "../../utils/jwt.js";
 
 export async function register(data: { name: string; phoneNo: string; emailAddress: string; password: string }) {
   const existing = await prisma.company.findFirst({
-    where: { OR: [{ phoneNo: data.phoneNo }, { emailAddress: data.emailAddress }] },
+    where: { phoneNo: data.phoneNo }, //{ OR: [{ phoneNo: data.phoneNo }, { emailAddress: data.emailAddress }] },
   });
-  if (existing) throw new Error("Company already exists");
+  if (existing) throw new Error("Account already exists");
 
   const hashed = await bcrypt.hash(data.password, 10);
   const company = await prisma.company.create({
