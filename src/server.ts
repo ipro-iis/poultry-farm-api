@@ -25,10 +25,21 @@ dotenv.config();
 
 const PORT: number = Number(process.env.PORT) || 3000;
 
+// Only start a server if not running on Vercel
 // Start HTTP server (Railway will handle HTTPS at the edge)
-http.createServer(app).listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+if (process.env.VERCEL !== "1") {
+  http.createServer(app).listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
+
+// ✅ Health check route
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
 });
+
+// Always export the app (needed for Vercel)
+export default app;
 
 // // Start HTTP server
 // http.createServer(app).listen(config.port, "0.0.0.0", () => {
