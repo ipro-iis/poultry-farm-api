@@ -1,0 +1,106 @@
+import { z } from "zod";
+export declare const dailyBodySchema: z.ZodObject<{
+    id: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    farmId: z.ZodOptional<z.ZodString>;
+    inputDate: z.ZodString;
+    dayIndex: z.ZodNumber;
+    chicken: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    deathLoss: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    deathSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    discardSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    goodSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    chickenManure: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    pesticides: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    riceHusk: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    charcoal: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    sugar: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    food: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    medicine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    strengthMedicine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    vaccine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    laborFee: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    other: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+    remark: z.ZodUnion<[z.ZodNullable<z.ZodOptional<z.ZodString>>, z.ZodLiteral<"">]>;
+}, z.core.$strip>;
+export declare const addSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        farmId: z.ZodString;
+    }, z.core.$strip>;
+    body: z.ZodObject<{
+        id: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+        farmId: z.ZodOptional<z.ZodString>;
+        inputDate: z.ZodString;
+        dayIndex: z.ZodNumber;
+        chicken: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        deathLoss: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        deathSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        discardSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        goodSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        chickenManure: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        pesticides: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        riceHusk: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        charcoal: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        sugar: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        food: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        medicine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        strengthMedicine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        vaccine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        laborFee: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        other: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+        remark: z.ZodUnion<[z.ZodNullable<z.ZodOptional<z.ZodString>>, z.ZodLiteral<"">]>;
+    }, z.core.$strip>;
+}, z.core.$strip>;
+export declare const startupSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        farmId: z.ZodString;
+    }, z.core.$strip>;
+    body: z.ZodObject<{
+        day0: z.ZodObject<{
+            id: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+            farmId: z.ZodOptional<z.ZodString>;
+            inputDate: z.ZodString;
+            dayIndex: z.ZodNumber;
+            chicken: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            deathLoss: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            deathSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            discardSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            goodSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            chickenManure: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            pesticides: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            riceHusk: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            charcoal: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            sugar: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            food: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            medicine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            strengthMedicine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            vaccine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            laborFee: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            other: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            remark: z.ZodUnion<[z.ZodNullable<z.ZodOptional<z.ZodString>>, z.ZodLiteral<"">]>;
+        }, z.core.$strip>;
+        day1: z.ZodObject<{
+            id: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+            farmId: z.ZodOptional<z.ZodString>;
+            inputDate: z.ZodString;
+            dayIndex: z.ZodNumber;
+            chicken: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            deathLoss: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            deathSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            discardSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            goodSale: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            chickenManure: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            pesticides: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            riceHusk: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            charcoal: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            sugar: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            food: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            medicine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            strengthMedicine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            vaccine: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            laborFee: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            other: z.ZodNullable<z.ZodOptional<z.ZodAny>>;
+            remark: z.ZodUnion<[z.ZodNullable<z.ZodOptional<z.ZodString>>, z.ZodLiteral<"">]>;
+        }, z.core.$strip>;
+    }, z.core.$strip>;
+}, z.core.$strip>;
+//# sourceMappingURL=daily.schemas.d.ts.map
