@@ -25,10 +25,6 @@ if (process.env.VERCEL !== "1") {
         console.log(`🚀 Server running on port ${PORT}`);
     });
 }
-// ✅ Health check route
-app.get("/api/health", (req, res) => {
-    res.json({ status: "ok", uptime: process.uptime() });
-});
 // Always export the app (needed for Vercel)
 export default app;
 // // Start HTTP server

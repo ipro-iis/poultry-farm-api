@@ -33,11 +33,6 @@ if (process.env.VERCEL !== "1") {
   });
 }
 
-// ✅ Health check route
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", uptime: process.uptime() });
-});
-
 // Always export the app (needed for Vercel)
 export default app;
 
